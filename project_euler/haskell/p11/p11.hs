@@ -44,7 +44,7 @@ maxForwDiagonals (w:[])         = 0
 maxForwDiagonals (w:x:[])       = 0
 maxForwDiagonals (w:x:y:[])     = 0
 maxForwDiagonals (w:x:y:z:xs)   = 
-            max (maxBackDiag woff xoff yoff z) (maxForwDiagonals (x:y:z:xs))
+            max (maxDiag woff xoff yoff z) (maxForwDiagonals (x:y:z:xs))
             where woff = tail $ tail $ tail w
                   xoff = tail $ tail x
                   yoff = tail y
@@ -55,20 +55,20 @@ maxBackDiagonals (w:[])         = 0
 maxBackDiagonals (w:x:[])       = 0
 maxBackDiagonals (w:x:y:[])     = 0
 maxBackDiagonals (w:x:y:z:xs)   = 
-            max (maxBackDiag w xoff yoff zoff) (maxBackDiagonals (x:y:z:xs))
+            max (maxDiag w xoff yoff zoff) (maxBackDiagonals (x:y:z:xs))
             where xoff = tail x
                   yoff = tail $ tail y
                   zoff = tail $ tail $ tail z
 
-maxBackDiag :: (Num a, Ord a) => [a] -> [a] -> [a] -> [a] -> a
-maxBackDiag _ _ _ []                    = 0
-maxBackDiag _ _ [] _                    = 0
-maxBackDiag _ [] _ _                    = 0
-maxBackDiag [] _ _ _                    = 0
-maxBackDiag (w:ws) (x:xs) (y:ys) (z:zs) = max curSum nextSum
+maxDiag :: (Num a, Ord a) => [a] -> [a] -> [a] -> [a] -> a
+maxDiag _ _ _ []                    = 0
+maxDiag _ _ [] _                    = 0
+maxDiag _ [] _ _                    = 0
+maxDiag [] _ _ _                    = 0
+maxDiag (w:ws) (x:xs) (y:ys) (z:zs) = max curSum nextSum
                     where curSum    = w*x*y*z
-                          nextSum   = maxBackDiag ws xs ys zs
+                          nextSum   = maxDiag ws xs ys zs
 
-{-answer :: (Num a) => a
-answer = maximum $ (maxRows numbers):(maxRows $ transpose numbers):(maxBackDiagonals numbers):(maxBackDiagonals (transpose numbers))-}
+answer :: Integer
+answer = maximum $ [maxRows numbers, maxRows $ transpose numbers, maxBackDiagonals numbers, maxForwDiagonals numbers]
 
